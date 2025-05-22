@@ -1,0 +1,325 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  min-width: 320px;
+  min-height: 100vh;
+  /* background: #282a2f url(/black-linen.png); */
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+code {
+  background-color: #1a1a1a;
+  padding: 2px 4px;
+  margin: 0 4px;
+  border-radius: 4px;
+}
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+  code {
+    background-color: #f9f9f9;
+  }
+}
+
+.metronome-button:focus {
+  outline: none;
+}
+
+.metronome-button {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background-color: transparent;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  margin: auto;
+}
+
+.bg-playing {
+  position: absolute;
+  width: 220%;
+  height: 220%;
+  top: -60%;
+  left: -60%;
+  background: conic-gradient(#00ffb7, #00b7ff, #00ffb7);
+  border-radius: 50%;
+  animation: rotate 4s linear infinite;
+  z-index: 0;
+}
+
+.bg {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  background-color: #222;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.tempo,
+.bpm {
+  font-size: 1.5em;
+  font-weight: bold;
+  background: conic-gradient(#00ffb7, #00b7ff, #00ffb7);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.tempo {
+  font-size: 2.2em;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+#slider {
+  transition: all 0.1s ease-in-out;
+  box-sizing: border-box;
+  font-size: 16px;
+  line-height: 1;
+  height: 2em;
+  background-color: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  width: 100%;
+}
+#slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+#slider:focus {
+  outline: none;
+}
+#slider::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+#slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 2em;
+  height: 2em;
+  margin-top: 0;
+  background-color: #282a2f;
+  border-radius: 1em;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+#slider::-moz-range-thumb {
+  width: 2em;
+  height: 2em;
+  margin-top: 0;
+  background-color: #282a2f;
+  border-radius: 1em;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+#slider::-ms-thumb {
+  width: 2em;
+  height: 2em;
+  margin-top: 0;
+  background-color: #282a2f;
+  border-radius: 1em;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+#slider:hover::-webkit-slider-thumb {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+#slider:hover::-moz-range-thumb {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+#slider:hover::-ms-thumb {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+#slider:active::-webkit-slider-thumb {
+  border-color: #ffffff;
+}
+#slider:active::-moz-range-thumb {
+  border-color: #ffffff;
+}
+#slider:active::-ms-thumb {
+  border-color: #ffffff;
+}
+#slider::-webkit-slider-runnable-track {
+  width: 100%;
+  cursor: pointer;
+  height: 1em;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+  background-color: transparent;
+}
+#slider::-moz-range-track {
+  width: 100%;
+  cursor: pointer;
+  height: 1em;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+  background-color: transparent;
+}
+#slider::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+
+
+.wrapper {
+  position: relative;
+  height: 20rem;
+  width: 3rem;
+}
+.wrapper::before, .wrapper::after {
+  display: block;
+  position: absolute;
+  z-index: 99;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0.75rem 0;
+  pointer-events: none;
+}
+.wrapper::before {
+  content: "+";
+}
+.wrapper::after {
+  content: "−";
+  bottom: 0;
+}
+
+#volume {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  padding: 0;
+  width: 20rem;
+  height: 3.5rem;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  border-radius: 1rem;
+  overflow: hidden;
+  cursor: row-resize;
+}
+
+#volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 0;
+  box-shadow: -20rem 0 0 20rem rgba(255, 255, 255, 0.2);
+}
+#volume::-moz-range-thumb {
+  border: none;
+  width: 0;
+  box-shadow: -20rem 0 0 20rem rgba(255, 255, 255, 0.2);
+}
+
+#container {
+  display: flex;
+}
+
+#container {
+  border: solid black 1px;
+}
+
+/* .metronome-container {
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  z-index: 10; /
+  pointer-events: auto; /* Permite la interacción con el componente 
+}*/
