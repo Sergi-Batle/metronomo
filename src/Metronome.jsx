@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./index.css";
 import Button from "./Button";
+import SphereSVG from "./SphereSVG";
 import SphereAnimation from "./SphereAnimation";
 
 export default function Metronome() {
@@ -8,6 +9,10 @@ export default function Metronome() {
     const [playing, setPlaying] = useState(false);
     const [active, setActive] = useState(false);
     const [volume, setVolume] = useState(1); // Volumen de 0 a 1
+    const [elapsed, setElapsed] = useState(() => {
+        const saved = localStorage.getItem("metronome_elapsed");
+        return saved ? Number(saved) : 0;
+    });
 
     const audioCtx = useRef(null);
     const gainNode = useRef(null); // Nuevo: referencia al GainNode
@@ -16,6 +21,9 @@ export default function Metronome() {
     const schedulerInterval = useRef(null);
     const sliderRef = useRef(null);
     const volumeSliderRef = useRef(null);
+    const intervalRef = useRef(null);
+
+    const sphereRef = useRef(null);
 
     const lookahead = 25.0; // ms
     const scheduleAheadTime = 0.1; // s
@@ -128,7 +136,7 @@ export default function Metronome() {
     useEffect(() => {
         const slider = volumeSliderRef.current;
         if (!slider) return;
-    
+
         const handleWheel = (e) => {
             e.preventDefault();
             const delta = Math.sign(e.deltaY);
@@ -138,13 +146,55 @@ export default function Metronome() {
                 return newVolume;
             });
         };
-    
+
         slider.addEventListener("wheel", handleWheel);
         return () => slider.removeEventListener("wheel", handleWheel);
     }, []);
 
+    useEffect(() => {
+        const button = document.querySelector(".metronome-button");
+        if (!button) return;
+
+        const handleWheel = (e) => {
+            e.preventDefault();
+            const delta = Math.sign(e.deltaY);
+            handleBpmChange(bpm - delta);
+        };
+
+        button.addEventListener("wheel", handleWheel);
+        return () => button.removeEventListener("wheel", handleWheel);
+    }, [bpm]);
+
+    // Incrementa el contador solo cuando playing es true
+    useEffect(() => {
+        if (playing) {
+            intervalRef.current = setInterval(() => {
+                setElapsed(prev => {
+                    const next = prev + 1;
+                    localStorage.setItem("metronome_elapsed", next);
+                    return next;
+                });
+            }, 1000);
+        } else if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
+    }, [playing]);
+
+    // Botón para resetear el contador
+    const handleResetElapsed = () => {
+        setElapsed(0);
+        localStorage.setItem("metronome_elapsed", "0");
+    };
+
     return (
-        <div id="container" className="metronome-container">
+        <>
             <div className="wrapper">
                 <input
                     id="volume"
@@ -158,30 +208,41 @@ export default function Metronome() {
                 />
             </div>
 
-
-            <div style={{ display: "block" }}>
-
-                <Button bpm={bpm} toggleMetronome={toggleMetronome} />
-
-                <div>
-                    <input
-                        id="slider"
-                        ref={sliderRef}
-                        type="range"
-                        min="40"
-                        max="200"
-                        value={bpm}
-                        onChange={(e) => handleBpmChange(Number(e.target.value))}
-                        style={{ width: 200, marginLeft: 10 }}
-                    />
+            <div className="metronome-center flex flex-col items-center justify-center min-h-screen w-full">
+                {/* Contador de tiempo y botón de reset */}
+                <div className="flex flex-row items-center mb-4 gap-2">
+                    <span className="text-sm text-gray-300">
+                        Tiempo activo: {elapsed}s
+                    </span>
+                    <button
+                        className="px-2 py-1 rounded bg-gray-700 text-white text-xs hover:bg-red-500"
+                        onClick={handleResetElapsed}
+                        title="Resetear contador"
+                    >
+                        Reset
+                    </button>
+                </div>
+                <div className="flex flex-col items-center">
+                    <div className="flex justify-center items-center">
+                        <SphereAnimation
+                            pulseIntervalMs={60000 / bpm}
+                            playing={playing}
+                        />
+                        <Button bpm={bpm} toggleMetronome={toggleMetronome} />
+                    </div>
+                    <div id="slider-container">
+                        <input
+                            id="slider"
+                            ref={sliderRef}
+                            type="range"
+                            min="40"
+                            max="200"
+                            value={bpm}
+                            onChange={(e) => handleBpmChange(Number(e.target.value))}
+                        />
+                    </div>
                 </div>
             </div>
-
-            < SphereAnimation
-                pulseIntervalMs={60000 / bpm}
-                playing={playing}
-
-            />
-        </div>
+        </>
     );
 }
