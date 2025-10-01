@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "electron-updater": "^6.3.9",
-    "animejs": "^3.2.1"
+    "animejs": "^4.2.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.2",
